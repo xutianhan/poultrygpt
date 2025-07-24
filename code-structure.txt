@@ -1,0 +1,16 @@
+poultrygpt-chat-middleware/
+├── app/
+│   ├── __init__.py
+│   ├── main.py            # FastAPI 入口
+│   ├── config.py          # 环境变量 & 配置
+│   ├── api/
+│   │   └── chat.py        # 与Dify交互的接口
+│   ├── services/
+│   │   ├── redis_service.py
+│   │   └── neo4j_service.py
+│   └── models/
+│       └── chat.py        # 接口定义
+├── run.sh     # 一键启动中间件服务（StenceTransformer + Neo4j + Redis）脚本
+├── stop.sh     # 一键关闭中间件服务脚本
+├── requirements.txt
+└── README.md
