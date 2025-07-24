@@ -1,4 +1,4 @@
-poultrygpt-chat-middleware/
+middleware/
 ├── app/
 │   ├── __init__.py
 │   ├── main.py            # FastAPI 入口
@@ -12,5 +12,4 @@ poultrygpt-chat-middleware/
 │       └── chat.py        # 接口定义
 ├── run.sh     # 一键启动中间件服务（StenceTransformer + Neo4j + Redis）脚本
 ├── stop.sh     # 一键关闭中间件服务脚本
-├── requirements.txt
-└── README.md
+└── requirements.txt

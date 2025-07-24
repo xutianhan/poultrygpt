@@ -1,0 +1,102 @@
+家禽疾病特征分析报告
+============================================================
+
+总特征数量: 572
+涉及疾病数量: 50
+
+特征类型分布:
+------------------------------------------------------------
+OTHER          : 332 条 (58.0%)
+  示例: 呈紫红色, 眼睑水肿, 鼻孔常有血色分泌物
+
+SYMPTOM        : 132 条 (23.1%)
+  示例: 鸡冠及肉垂肿胀, 流泪, 趾及腿部磷片出血
+
+PATHOLOGY      : 60 条 (10.5%)
+  示例: 鸡冠有坏死灶, 坏死后有痂皮, 气囊炎
+
+AGE_FEATURE    : 37 条 (6.5%)
+  示例: 16周龄以前的鸡较少发生, 全眼球炎见于30-60日龄雏鸡, 雏鸡脐炎
+
+EPIDEMIOLOGY   : 8 条 (1.4%)
+  示例: 死亡率高, 死亡率高, 发病率高
+
+CLINICAL_SIGN  : 2 条 (0.3%)
+  示例: 触诊有波动感, 触诊有波动感
+
+LAB_FEATURE    : 1 条 (0.2%)
+  示例: 涂片染色
+
+
+疾病特征分布TOP10:
+------------------------------------------------------------
+禽流感                 : 25 个特征
+  - SYMPTOM: 11
+  - OTHER: 11
+  - PATHOLOGY: 3
+
+鸡白痢                 : 22 个特征
+  - OTHER: 11
+  - AGE_FEATURE: 3
+  - SYMPTOM: 2
+  - PATHOLOGY: 6
+
+VB6缺乏症              : 21 个特征
+  - OTHER: 16
+  - SYMPTOM: 1
+  - AGE_FEATURE: 2
+  - PATHOLOGY: 2
+
+鸡新城疫                : 20 个特征
+  - OTHER: 11
+  - SYMPTOM: 7
+  - PATHOLOGY: 2
+
+鸡组织滴虫病              : 17 个特征
+  - OTHER: 11
+  - SYMPTOM: 1
+  - PATHOLOGY: 4
+  - AGE_FEATURE: 1
+
+鸡传染性法氏囊病            : 16 个特征
+  - OTHER: 7
+  - AGE_FEATURE: 2
+  - EPIDEMIOLOGY: 2
+  - SYMPTOM: 5
+
+鸡痘                  : 15 个特征
+  - OTHER: 12
+  - SYMPTOM: 2
+  - PATHOLOGY: 1
+
+传染性鼻炎               : 15 个特征
+  - OTHER: 12
+  - SYMPTOM: 2
+  - AGE_FEATURE: 1
+
+鸡新城疫（肺脑型）           : 14 个特征
+  - SYMPTOM: 6
+  - OTHER: 4
+  - PATHOLOGY: 3
+  - AGE_FEATURE: 1
+
+鸡传染性脑脊髓炎            : 14 个特征
+  - OTHER: 8
+  - SYMPTOM: 3
+  - PATHOLOGY: 2
+  - AGE_FEATURE: 1
+
+
+特征类型详细统计:
+------------------------------------------------------------
+group_type     different  similar
+feature_type                     
+age_feature           36        1
+clinical_sign          0        2
+epidemiology           8        0
+lab_feature            1        0
+other                200      132
+pathology             49       11
+symptom               86       46
+
+特征类型分布图已保存为 'feature_type_distribution.png'
