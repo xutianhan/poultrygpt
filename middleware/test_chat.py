@@ -1,6 +1,6 @@
 import requests
 
-url = "http://localhost:8000/api/chat"
+url = "http://175.27.253.234:8000/api/chat"
 data = {
     "user_id": "user123",
     "session_id": "session456",

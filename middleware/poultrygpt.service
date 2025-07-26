@@ -1,0 +1,14 @@
+[Unit]
+Description=PoultryGPT FastAPI Service
+After=network.target redis.service neo4j.service
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+User=root
+WorkingDirectory=/home/poultrygpt/code
+ExecStart=/home/poultrygpt/code/run.sh
+ExecStop=/home/poultrygpt/code/stop.sh
+
+[Install]
+WantedBy=multi-user.target
