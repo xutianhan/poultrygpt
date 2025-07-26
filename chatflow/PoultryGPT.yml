@@ -1,0 +1,867 @@
+app:
+  description: PoultryGPT-Basic
+  icon: 📑
+  icon_background: '#E0F2FE'
+  mode: advanced-chat
+  name: PoultryGPT
+  use_icon_as_answer_icon: true
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/openai:0.0.30@1f5ecdef108418a467e54da2dcf5de2cf22b47632abc8633194ac9fb96317ede
+kind: app
+version: 0.3.1
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      allowed_file_extensions:
+      - .JPG
+      - .JPEG
+      - .PNG
+      - .GIF
+      - .WEBP
+      - .SVG
+      allowed_file_types:
+      - image
+      allowed_file_upload_methods:
+      - local_file
+      - remote_url
+      enabled: false
+      fileUploadConfig:
+        audio_file_size_limit: 50
+        batch_count_limit: 5
+        file_size_limit: 15
+        image_file_size_limit: 10
+        video_file_size_limit: 100
+        workflow_file_upload_limit: 10
+      image:
+        enabled: false
+        number_limits: 3
+        transfer_methods:
+        - local_file
+        - remote_url
+      number_limits: 3
+    opening_statement: ''
+    retriever_resource:
+      enabled: false
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions: []
+    suggested_questions_after_answer:
+      enabled: false
+    text_to_speech:
+      enabled: false
+      language: ''
+      voice: ''
+  graph:
+    edges:
+    - data:
+        isInLoop: false
+        sourceType: start
+        targetType: question-classifier
+      id: 1711528914102-source-1753428946460-target
+      source: '1711528914102'
+      sourceHandle: source
+      target: '1753428946460'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: question-classifier
+        targetType: knowledge-retrieval
+      id: 1753428946460-2-1711528915811-target
+      source: '1753428946460'
+      sourceHandle: '2'
+      target: '1711528915811'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: question-classifier
+        targetType: llm
+      id: 1753428946460-1-1753432392183-target
+      source: '1753428946460'
+      sourceHandle: '1'
+      target: '1753432392183'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: knowledge-retrieval
+        targetType: code
+      id: 1711528915811-source-1753451144612-target
+      source: '1711528915811'
+      sourceHandle: source
+      target: '1753451144612'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: code
+        targetType: if-else
+      id: 1753451144612-source-1753451655537-target
+      source: '1753451144612'
+      sourceHandle: source
+      target: '1753451655537'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1753451655537-true-1711528917469-target
+      source: '1753451655537'
+      sourceHandle: 'true'
+      target: '1711528917469'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: if-else
+        targetType: llm
+      id: 1753451655537-false-1753454845653-target
+      source: '1753451655537'
+      sourceHandle: 'false'
+      target: '1753454845653'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 1711528917469-source-1711528919501-target
+      selected: false
+      source: '1711528917469'
+      sourceHandle: source
+      target: '1711528919501'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: answer
+      id: 1753454845653-source-1711528919501-target
+      selected: false
+      source: '1753454845653'
+      sourceHandle: source
+      target: '1711528919501'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1753492105117'
+        sourceType: loop-start
+        targetType: http-request
+      id: 1753492105117start-source-1753497586529-target
+      source: 1753492105117start
+      sourceHandle: source
+      target: '1753497586529'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInLoop: false
+        sourceType: llm
+        targetType: loop
+      id: 1753432392183-source-1753492105117-target
+      source: '1753432392183'
+      sourceHandle: source
+      target: '1753492105117'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1753492105117'
+        sourceType: http-request
+        targetType: code
+      id: 1753497586529-source-1753498054099-target
+      source: '1753497586529'
+      sourceHandle: source
+      target: '1753498054099'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1753492105117'
+        sourceType: code
+        targetType: if-else
+      id: 1753498054099-source-1753497945767-target
+      source: '1753498054099'
+      sourceHandle: source
+      target: '1753497945767'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1753492105117'
+        sourceType: if-else
+        targetType: llm
+      id: 1753497945767-true-1753498659132-target
+      source: '1753497945767'
+      sourceHandle: 'true'
+      target: '1753498659132'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1753492105117'
+        sourceType: llm
+        targetType: answer
+      id: 1753498659132-source-1753498921406-target
+      source: '1753498659132'
+      sourceHandle: source
+      target: '1753498921406'
+      targetHandle: target
+      type: custom
+      zIndex: 1002
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: loop
+        targetType: answer
+      id: 1753492105117-source-1753499153148-target
+      source: '1753492105117'
+      sourceHandle: source
+      target: '1753499153148'
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        desc: ''
+        selected: false
+        title: 开始
+        type: start
+        variables: []
+      height: 54
+      id: '1711528914102'
+      position:
+        x: -316.9496772594973
+        y: 90.88679248900505
+      positionAbsolute:
+        x: -316.9496772594973
+        y: 90.88679248900505
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        dataset_ids:
+        - MWgFTDrGnyBUIYmYGhU5HLQhCK5mQDmxZFJiM1/jW5lvKFcTr09j8Uj3jtIGsJkd
+        desc: 检索家禽养殖相关的QA知识库
+        multiple_retrieval_config:
+          reranking_enable: false
+          reranking_mode: weighted_score
+          reranking_model:
+            model: ''
+            provider: ''
+          score_threshold: 0.8
+          top_k: 1
+          weights:
+            keyword_setting:
+              keyword_weight: 0.3
+            vector_setting:
+              embedding_model_name: text-embedding-3-large
+              embedding_provider_name: langgenius/openai/openai
+              vector_weight: 0.7
+        query_variable_selector:
+        - '1711528914102'
+        - sys.query
+        retrieval_mode: multiple
+        selected: false
+        single_retrieval_config:
+          model:
+            completion_params:
+              frequency_penalty: 0
+              max_tokens: 512
+              presence_penalty: 0
+              temperature: 0
+              top_p: 1
+            mode: chat
+            name: gpt-3.5-turbo
+            provider: openai
+        title: QA知识检索
+        type: knowledge-retrieval
+      dragging: false
+      height: 120
+      id: '1711528915811'
+      position:
+        x: 251.83777822231423
+        y: 289.77257785288197
+      positionAbsolute:
+        x: 251.83777822231423
+        y: 289.77257785288197
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - '1711528915811'
+          - result
+        desc: ''
+        memory:
+          query_prompt_template: '{{#sys.query#}}'
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 50
+        model:
+          completion_params:
+            frequency_penalty: 0
+            max_tokens: 5000
+            presence_penalty: 0
+            temperature: 0.2
+            top_p: 1
+          mode: chat
+          name: chatgpt-4o-latest
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: 79580970-fbbe-40c2-ae48-2c4720125d49
+          role: system
+          text: '你是一个家禽养殖方面的专家。
+
+            使用以下内容作为你所学习的知识，放在<context></context> XML标签内。
+
+            <context>
+
+            {{#context#}}
+
+            </context>
+
+            回答用户时：
+
+            请尽量按照上面知识内容回复。避免提及你是从上下文中获取的信息。'
+        selected: false
+        title: LLM总结
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 90
+      id: '1711528917469'
+      position:
+        x: 1308.4869685370384
+        y: 281.08545010642877
+      positionAbsolute:
+        x: 1308.4869685370384
+        y: 281.08545010642877
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        answer: '{{#1753454845653.text#}}{{#1711528917469.text#}}'
+        desc: ''
+        selected: false
+        title: 问答回复
+        type: answer
+        variables: []
+      height: 123
+      id: '1711528919501'
+      position:
+        x: 1863.23263094416
+        y: 313.9930453751034
+      positionAbsolute:
+        x: 1863.23263094416
+        y: 313.9930453751034
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        classes:
+        - id: '1'
+          name: need KG
+        - id: '2'
+          name: no KG
+        desc: ''
+        instruction: 你是一个家禽病鸡诊断的专家。判断用户输入“{{sys.query}}”是否需要进行病鸡疾病诊断的KG推理， KG中存储了常见鸡病鉴别诊断的特征。如果需要，返回“need
+          KG”；否则返回“no KG”。
+        instructions: ''
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: chatgpt-4o-latest
+          provider: langgenius/openai/openai
+        query_variable_selector:
+        - '1711528914102'
+        - sys.query
+        selected: false
+        title: 意图理解
+        topics: []
+        type: question-classifier
+        vision:
+          enabled: false
+      height: 172
+      id: '1753428946460'
+      position:
+        x: -36.21611610039702
+        y: 96.09766649194336
+      positionAbsolute:
+        x: -36.21611610039702
+        y: 96.09766649194336
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: 识别用户问题中与家禽诊断相关的实体
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: gpt-4o-mini
+          provider: langgenius/openai/openai
+        prompt_template:
+        - edition_type: basic
+          id: 724f0805-385f-45bc-9c72-2d68af445385
+          role: system
+          text: 从用户输入“{{sys.query}}”中提取家禽症状相关的实体信息，并以JSON数组格式返回。
+        selected: false
+        structured_output:
+          schema:
+            additionalProperties: false
+            properties:
+              entities:
+                items:
+                  type: string
+                type: array
+            required:
+            - entities
+            type: object
+        structured_output_enabled: true
+        title: 实体识别
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 118
+      id: '1753432392183'
+      position:
+        x: 245.41452717485447
+        y: -21.167568868016062
+      positionAbsolute:
+        x: 245.41452717485447
+        y: -21.167568868016062
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        code: '
+
+          import json
+
+
+          # 假设qa_pairs_output是QA pairs节点的输出
+
+          qa_pairs_output = json.loads("{{qa_pairs_output}}")
+
+          qa_confidence = qa_pairs_output["result"][0]["metadata"]["score"]'
+        code_language: python3
+        desc: 提取与QA知识检索的相似度
+        outputs:
+          qa_confidence:
+            children: null
+            type: number
+        selected: false
+        title: 置信度提取
+        type: code
+        variables:
+        - value_selector:
+          - '1711528915811'
+          - result
+          value_type: array[object]
+          variable: qa_pairs_output
+      height: 82
+      id: '1753451144612'
+      position:
+        x: 652.1079528773638
+        y: 335.27737330369246
+      positionAbsolute:
+        x: 652.1079528773638
+        y: 335.27737330369246
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: ≥
+            id: 674c1341-462b-4a8b-b9f4-e4d3bb3fbf0e
+            value: '0.8'
+            varType: number
+            variable_selector:
+            - '1753451144612'
+            - qa_confidence
+          id: 'true'
+          logical_operator: and
+        desc: ''
+        selected: false
+        title: 条件分支
+        type: if-else
+      height: 126
+      id: '1753451655537'
+      position:
+        x: 937.6099659790223
+        y: 304.3684190936969
+      positionAbsolute:
+        x: 937.6099659790223
+        y: 304.3684190936969
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        context:
+          enabled: true
+          variable_selector:
+          - sys
+          - query
+        desc: ''
+        model:
+          completion_params:
+            temperature: 0.5
+          mode: chat
+          name: chatgpt-4o-latest
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: 0602fbb4-937e-41c4-9a71-3285a1ce3ad1
+          role: system
+          text: 你是一个家禽养殖方面的专家。请根据用户输入的问题“{{sys.query}}”，检索权威的家禽养殖指南或者论文，进行回复。如果你不知道或者确信度很低，就直说不知道。
+        selected: false
+        title: LLM 检索回复
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 90
+      id: '1753454845653'
+      position:
+        x: 1278.0933591015269
+        y: 499.2437052637226
+      positionAbsolute:
+        x: 1278.0933591015269
+        y: 499.2437052637226
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    - data:
+        break_conditions: []
+        desc: ''
+        error_handle_mode: terminated
+        height: 256
+        logical_operator: and
+        loop_count: 20
+        selected: false
+        start_node_id: 1753492105117start
+        title: 循环
+        type: loop
+        width: 1491
+      height: 256
+      id: '1753492105117'
+      position:
+        x: 591.1611457643205
+        y: -94.41448378238826
+      positionAbsolute:
+        x: 591.1611457643205
+        y: -94.41448378238826
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 1491
+      zIndex: 1
+    - data:
+        desc: ''
+        isInLoop: true
+        selected: false
+        title: ''
+        type: loop-start
+      draggable: false
+      height: 48
+      id: 1753492105117start
+      parentId: '1753492105117'
+      position:
+        x: 24
+        y: 68
+      positionAbsolute:
+        x: 615.1611457643205
+        y: -26.41448378238826
+      selectable: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom-loop-start
+      width: 44
+      zIndex: 1002
+    - data:
+        authorization:
+          config: null
+          type: no-auth
+        body:
+          data:
+          - id: key-value-217
+            key: ''
+            type: text
+            value: "{\n  \"user_id\": \"{{sys.user_id}}\",\n  \"session_id\": \"{{sys.session_id}}\"\
+              ,\n  \"query\": \"{{sys.query}}\",\n  \"entities\": {{#1753432392183.structured_output.entities#}}\n\
+              }"
+          type: json
+        desc: 请求家禽疾病诊断多轮对话服务
+        headers: Content-Type:application/json
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1753492105117'
+        method: post
+        params: ''
+        retry_config:
+          max_retries: 3
+          retry_enabled: true
+          retry_interval: 100
+        selected: false
+        ssl_verify: false
+        timeout:
+          connect: 5
+          max_connect_timeout: 0
+          max_read_timeout: 0
+          max_write_timeout: 0
+          read: 10
+          write: 10
+        title: 多轮诊断引擎
+        type: http-request
+        url: http://175.27.253.234:8000/api/chat
+        variables: []
+      height: 167
+      id: '1753497586529'
+      parentId: '1753492105117'
+      position:
+        x: 104.22185964887217
+        y: 65.98771396093878
+      positionAbsolute:
+        x: 695.3830054131927
+        y: -28.426769821449483
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        cases:
+        - case_id: 'true'
+          conditions:
+          - comparison_operator: '='
+            id: 978477dc-881f-4ca0-9e5b-46302049fc66
+            value: '1'
+            varType: number
+            variable_selector:
+            - '1753498054099'
+            - bool_diagnosed
+          id: 'true'
+          logical_operator: and
+        desc: ''
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1753492105117'
+        selected: false
+        title: 确诊参数判断
+        type: if-else
+      height: 126
+      id: '1753497945767'
+      parentId: '1753492105117'
+      position:
+        x: 644.9780002963112
+        y: 89.69284902346905
+      positionAbsolute:
+        x: 1236.1391460606317
+        y: -4.721634758919208
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        code: 'import json
+
+
+          middleware_response = json.loads("{{fastapi_response}}")
+
+          bool_diagnosed = middleware_response["diagnosed"]
+
+          disease = middleware_response["disease"]
+
+          symptoms = middleware_response["symptoms"]'
+        code_language: python3
+        desc: ''
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1753492105117'
+        outputs:
+          bool_diagnosed:
+            children: null
+            type: number
+          disease:
+            children: null
+            type: string
+          symptoms:
+            children: null
+            type: array[string]
+        selected: false
+        title: 确诊参数提取
+        type: code
+        variables:
+        - value_selector:
+          - '1753497586529'
+          - body
+          value_type: string
+          variable: fastapi_response
+      height: 54
+      id: '1753498054099'
+      parentId: '1753492105117'
+      position:
+        x: 369.28245327411173
+        y: 98.54850091472166
+      positionAbsolute:
+        x: 960.4435990384322
+        y: 4.134017132333398
+      selected: true
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: ''
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1753492105117'
+        model:
+          completion_params:
+            temperature: 0.3
+          mode: chat
+          name: chatgpt-4o-latest
+          provider: langgenius/openai/openai
+        prompt_template:
+        - id: 4cdd30a4-b10c-4a88-ac70-f9d532d432c6
+          role: system
+          text: '你是一个家禽养殖方面的专家。请根据家禽的症状:{{#1753498054099.symptoms#}}以及诊断的疾病:{{#1753498054099.disease#}}，撰写诊断报告。内容包括：
+
+            家禽症状、诊断的疾病、如何精准治疗、如何预防。'
+        selected: false
+        title: 诊断报告生成
+        type: llm
+        variables: []
+        vision:
+          enabled: false
+      height: 90
+      id: '1753498659132'
+      parentId: '1753492105117'
+      position:
+        x: 923.7649550777667
+        y: 65
+      positionAbsolute:
+        x: 1514.9261008420872
+        y: -29.41448378238826
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        answer: '{{#1753498659132.text#}}'
+        desc: ''
+        isInIteration: false
+        isInLoop: true
+        loop_id: '1753492105117'
+        selected: false
+        title: 确诊回复
+        type: answer
+        variables: []
+      height: 105
+      id: '1753498921406'
+      parentId: '1753492105117'
+      position:
+        x: 1230.728096960583
+        y: 65
+      positionAbsolute:
+        x: 1821.8892427249034
+        y: -29.41448378238826
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+      zIndex: 1002
+    - data:
+        answer: 对不起，根据您提供的信息，暂时无法确诊。
+        desc: ''
+        selected: false
+        title: 无法确诊回复
+        type: answer
+        variables: []
+      height: 118
+      id: '1753499153148'
+      position:
+        x: 2135.889305389136
+        y: 18.26163561472616
+      positionAbsolute:
+        x: 2135.889305389136
+        y: 18.26163561472616
+      selected: false
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 244
+    viewport:
+      x: -247.18139763253976
+      y: 287.0450806743511
+      zoom: 1.0124388634231318
