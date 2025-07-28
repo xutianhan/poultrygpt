@@ -6,3 +6,4 @@ pydantic==2.7.1
 pydantic-settings==2.10.1
 python-dotenv==1.0.1
 sentence-transformers==5.0.0
+rank-bm25==0.2.2

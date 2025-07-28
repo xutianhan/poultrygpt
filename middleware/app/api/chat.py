@@ -1,6 +1,9 @@
 from fastapi import APIRouter
 from app.models.chat import ChatRequest, ChatResponse
 from app.services import redis_service, neo4j_service, semantic
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
 router = APIRouter(prefix="/api", tags=["chat"])
 
@@ -38,16 +41,63 @@ def chat_endpoint(req: ChatRequest):
             need_clarify=True,
         )
 
-    # 4. 无需澄清 → 用已确认实体查询 Neo4j
-    diseases = []
-    for sym in state.get("entities", []):
-        diseases += neo4j_service.get_diseases_by_symptom(sym)
-    diseases = list({d["disease"] for d in diseases})[:5]
+    # 4. 无需澄清 → 用已确认实体查询 Redis
+    user_symptoms = state.get("entities", [])
+    all_disease_symptoms = redis_service.get_all_disease_symptoms()
 
-    reply = f"根据症状 {', '.join(state.get('entities', []))}，可能疾病：{', '.join(diseases)}"
-    redis_service.set_session(uid, sid, last_question=reply)
+    # 5. 计算相似度
+    disease_ids = list(all_disease_symptoms.keys())
+    disease_symptoms = [disease["symptoms"] for disease in all_disease_symptoms.values()]
+    similarity_scores = calculate_similarity(user_symptoms, disease_symptoms)
+    threshold = 0.7  # 相似度阈值
+    diagnosed_diseases = [all_disease_symptoms[disease_id] for disease_id, score in zip(disease_ids, similarity_scores) if score >= threshold]
+
+    # 6. 如果确诊疾病，生成诊断报告
+    if diagnosed_diseases:
+        report = ""
+        for disease in diagnosed_diseases:
+            report += generate_diagnosis_report(user_symptoms, disease["disease_name"])
+        redis_service.set_session(uid, sid, diagnosed=True, diseases=[disease["disease_name"] for disease in diagnosed_diseases])
+        return ChatResponse(
+            reply=report,
+            session_state=redis_service.get_session(uid, sid),
+            need_clarify=False,
+        )
+
+    # 7. 如果未确诊，继续澄清症状
+    suggested_symptoms = neo4j_service.get_suggested_symptoms(disease_ids, state.get("entities", []))
+    question = f"根据症状 {', '.join(user_symptoms)}，可能的疾病有：{', '.join([disease['disease_name'] for disease in all_disease_symptoms.values()])}。请提供更多症状以缩小范围。建议描述以下症状：{', '.join(suggested_symptoms)}"
+    redis_service.set_session(uid, sid, last_question=question)
     return ChatResponse(
-        reply=reply,
+        reply=question,
         session_state=redis_service.get_session(uid, sid),
-        need_clarify=False,
+        need_clarify=True,
     )
+
+def calculate_similarity(user_symptoms, disease_symptoms):
+    vectorizer = TfidfVectorizer()
+    user_symptoms_text = " ".join(user_symptoms)
+    disease_symptoms_text = [" ".join(symptoms) for symptoms in disease_symptoms]
+    
+    tfidf_matrix = vectorizer.fit_transform([user_symptoms_text] + disease_symptoms_text)
+    similarity_scores = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:]).flatten()
+    
+    return similarity_scores
+
+def generate_diagnosis_report(symptoms, disease):
+    report = f"""
+    诊断报告：
+    - 家禽症状：{', '.join(symptoms)}
+    - 诊断的疾病：{disease}
+    - 治疗建议：{get_treatment(disease)}
+    - 预防措施：{get_prevention(disease)}
+    """
+    return report
+
+def get_treatment(disease):
+    # 从知识图谱中获取治疗建议
+    return neo4j_service.get_treatment(disease)
+
+def get_prevention(disease):
+    # 从知识图谱中获取预防措施
+    return neo4j_service.get_prevention(disease)
