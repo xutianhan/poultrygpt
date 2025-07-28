@@ -6,9 +6,9 @@ After=network.target redis.service neo4j.service
 Type=simple
 RemainAfterExit=yes
 User=root
-WorkingDirectory=/home/poultrygpt/code
-ExecStart=/home/poultrygpt/code/run.sh
-ExecStop=/home/poultrygpt/code/stop.sh
+WorkingDirectory=/home/poultrygpt/code/middleware
+ExecStart=/home/poultrygpt/code/middleware/run.sh
+ExecStop=/home/poultrygpt/code/middleware/stop.sh
 
 [Install]
 WantedBy=multi-user.target
