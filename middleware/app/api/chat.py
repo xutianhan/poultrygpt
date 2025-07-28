@@ -3,16 +3,21 @@ from app.models.chat import ChatRequest, ChatResponse
 from app.services import redis_service, neo4j_service, semantic
 from rank_bm25 import BM25Okapi
 import numpy as np
+import logging
+
+# 配置日志
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/chat", tags=["chat"])
 
 @router.post("/diagnose", response_model=ChatResponse)
-def diagnose_endpoint(req: ChatRequest):
+def chat_endpoint(req: ChatRequest):
     uid, sid = req.user_id, req.session_id
     state = redis_service.get_session(uid, sid)
     turn = redis_service.incr_turn(uid, sid)  # 先自增轮次
 
-    logger.info(f"Step 1: User ID: {uid}, Session ID: {sid}, Turn: {turn}, Intent: {req.intent}, Entities: {req.entities}")
+    logger.info(f"Step 1: User ID: {uid}, Session ID: {sid}, Turn: {turn}, Intent: {req.intent}, Query: {req.query}, Entities: {req.entities}")
 
     # 1. 把 Dify 给的实体做一次标准化 / 相似度校验
     confirmed = []
@@ -30,6 +35,7 @@ def diagnose_endpoint(req: ChatRequest):
     redis_service.set_session(
         uid, sid,
         intent=req.intent,
+        query=req.query,  # 记录用户的原始查询
         entities=list(set(state.get("entities", []) + confirmed)),
         pending=pending,
     )
@@ -43,6 +49,9 @@ def diagnose_endpoint(req: ChatRequest):
             reply=question,
             session_state=redis_service.get_session(uid, sid),
             need_clarify=True,
+            diagnosed=False,
+            diseases=None,
+            symptoms=None
         )
 
     # 4. 无需澄清 → 用已确认实体查询 Redis
@@ -63,17 +72,20 @@ def diagnose_endpoint(req: ChatRequest):
     logger.info(f"Step 5: Similarity scores: {similarity_scores}")
     logger.info(f"Step 5: Diagnosed diseases: {[disease['disease_name'] for disease in diagnosed_diseases]}")
 
-    # 6. 如果确诊疾病，生成诊断报告
+    # 6. 如果确诊疾病，返回疾病和症状列表
     if diagnosed_diseases:
-        report = ""
-        for disease in diagnosed_diseases:
-            report += generate_diagnosis_report(user_symptoms, disease["disease_name"])
-        redis_service.set_session(uid, sid, diagnosed=True, diseases=[disease["disease_name"] for disease in diagnosed_diseases])
-        logger.info(f"Step 6: Diagnosis report: {report}")
+        diagnosed_disease_names = [disease["disease_name"] for disease in diagnosed_diseases]
+        diagnosed_symptoms = [symptom for disease in diagnosed_diseases for symptom in disease["symptoms"]]
+        reply = f"根据症状 {', '.join(user_symptoms)}，确诊的疾病有：{', '.join(diagnosed_disease_names)}"
+        redis_service.set_session(uid, sid, diagnosed=True, diseases=diagnosed_disease_names)
+        logger.info(f"Step 6: Diagnosis reply: {reply}")
         return ChatResponse(
-            reply=report,
+            reply=reply,
             session_state=redis_service.get_session(uid, sid),
             need_clarify=False,
+            diagnosed=True,
+            diseases=diagnosed_disease_names,
+            symptoms=diagnosed_symptoms
         )
 
     # 7. 如果未确诊，继续澄清症状
@@ -85,4 +97,7 @@ def diagnose_endpoint(req: ChatRequest):
         reply=question,
         session_state=redis_service.get_session(uid, sid),
         need_clarify=True,
+        diagnosed=False,
+        diseases=None,
+        symptoms=None
     )
