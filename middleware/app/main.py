@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.api.chat import router as chat_router
 from app.services.semantic import KB_IDS, KB_NAMES, KB_VECS  # 触发加载
+import logging
 
 # 配置日志
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
