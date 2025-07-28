@@ -1,4 +1,3 @@
-# build_feature_vec.py
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 import numpy as np
@@ -6,7 +5,7 @@ import os
 import pickle
 
 MODEL_NAME = "moka-ai/m3e-small"
-CSV_PATH   = "feature.csv"
+CSV_PATH   = "../../../pre-process/KG/import_data/feature.csv"
 VEC_PATH   = "feature_vec.pkl"
 
 def main():
