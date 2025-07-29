@@ -22,7 +22,7 @@ def get_diseases_by_symptom(symptom: str):
 
 def preload_diseases_with_symptoms():
     cypher_query = """
-    MATCH (d:Disease)-[:DIAGNOSE]->(f:Feature)
+    MATCH (d:Disease)-[:RELATION]->(f:Feature)
     RETURN d.diseaseID AS disease_id, d.diseaseName AS disease_name, collect(f.featureName) AS symptoms
     """
     with driver.session() as session:
