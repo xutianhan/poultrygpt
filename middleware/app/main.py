@@ -4,6 +4,7 @@ from app.services.semantic import KB_IDS, KB_NAMES, KB_VECS  # 触发加载
 from app.services.neo4j_service import preload_diseases_with_symptoms
 import logging
 from logging.handlers import TimedRotatingFileHandler
+import os
 
 
 # 确保日志文件夹存在
