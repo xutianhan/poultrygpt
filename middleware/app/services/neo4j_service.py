@@ -32,3 +32,4 @@ def preload_diseases_with_symptoms():
             disease_name = record["disease_name"]
             symptoms = record["symptoms"]
             r.hset("disease_symptoms", disease_id, json.dumps({"disease_name": disease_name, "symptoms": symptoms}))
+
