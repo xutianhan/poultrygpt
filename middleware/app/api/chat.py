@@ -58,7 +58,7 @@ def chat_endpoint(req: ChatRequest):
         )
 
     # 4. 无需澄清 → 用已确认实体查询 Redis
-    user_symptoms = state.get("entities", [])
+    user_symptoms = [entity[0] for entity in state.get("entities", [])]  # 提取 
     all_disease_symptoms = redis_service.get_all_disease_symptoms()
 
     logger.info(f"Step 4: User symptoms: {user_symptoms}")
