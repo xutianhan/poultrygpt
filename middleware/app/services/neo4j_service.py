@@ -73,14 +73,11 @@ def preload_diseases_with_symptoms():
 def get_suggested_symptoms(disease_ids: list, existing_symptoms: list):
     """
     根据疾病 ID 和已有症状，推荐其他可能相关的症状。
-    :param disease_ids: 疾病 ID 列表
-    :param existing_symptoms: 用户已经提供的症状列表
-    :return: 推荐的症状列表
     """
     cypher_query = """
-    MATCH (d:Disease)-[:RELATION]->(s:Feature)
-    WHERE d.diseaseID IN $disease_ids AND s.name NOT IN $existing_symptoms
-    RETURN DISTINCT s.name AS symptom
+    MATCH (d:Disease)-[:RELATION]->(f:Feature)
+    WHERE d.diseaseID IN $disease_ids AND NOT (f.featureName IN $existing_symptoms)
+    RETURN DISTINCT f.featureName AS symptom
     LIMIT 5
     """
     with driver.session() as session:
