@@ -32,8 +32,7 @@ def chat_endpoint(req: ChatRequest):
     logger.info(f"Step 2: Normalized entities: {confirmed}, Pending clarification: {pending}")
 
     # 2. 更新 Redis 状态
-    # 确保 entities 是可哈希的，这里只提取 symptom 部分
-    existing_entities = set(state.get("entities", []))
+    existing_entities = set(entity[0] for entity in state.get("entities", []))
     new_entities = [entity[0] for entity in confirmed]  # 提取 symptom 部分
     updated_entities = list(existing_entities.union(new_entities))  # 合并并去重
     redis_service.set_session(
