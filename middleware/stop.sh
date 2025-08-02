@@ -1,6 +1,7 @@
 #!/bin/bash
 set +e  # 允许部分失败继续执行
 
+
 echo ">>> 停止 FastAPI ..."
 pkill -f "uvicorn.*app.main:app" || echo "FastAPI 未运行"
 
@@ -15,9 +16,11 @@ gc.collect()
 PY
 
 echo ">>> 清空 Redis 缓存 ..."
-python3 - <<'PY'
-from app.services.redis_service import clear_redis_cache
-clear_redis_cache()
+python3 - <<'PY' 2>/dev/null
+import redis
+from app.config import settings
+r = redis.from_url(settings.redis_url)
+r.flushall()
 PY
 
 echo ">>> 停止 Redis ..."
@@ -27,3 +30,4 @@ echo ">>> 停止 Neo4j ..."
 sudo systemctl stop neo4j || echo "Neo4j 已停止"
 
 echo ">>> 所有组件已关闭!"
+
