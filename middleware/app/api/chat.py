@@ -57,7 +57,7 @@ def chat_endpoint(req: ChatRequest):
             symptoms=None
         )
 
-    # 4. 无需澄清 → 用已确认实体查询 Redis
+    # 4. 无需澄清，则用已确认实体查询 Redis
     user_symptoms = [entity[0] for entity in state.get("entities", [])]  # 提取 
     all_disease_symptoms = redis_service.get_all_disease_symptoms()
 
@@ -104,3 +104,21 @@ def chat_endpoint(req: ChatRequest):
         diseases=None,
         symptoms=None
     )
+
+    # 8. 如果未确诊且轮数 >= 20，结束对话并给出最可能的三个疾病
+    if turn >= 20:
+        logger.info(f"Step 8: Reaching max turns, ending the conversation.")
+        top_diseases = sorted(zip(disease_ids, similarity_scores), key=lambda x: x[1], reverse=True)[:3]
+        top_disease_names = [all_disease_symptoms[disease_id]["disease_name"] for disease_id, _ in top_diseases]
+        reply = f"经过以上您提供的症状，经过分析，家禽最可能患有的疾病是：{', '.join(top_disease_names)}"
+        redis_service.set_session(uid, sid, diagnosed=False, diseases=top_disease_names)
+        logger.info(f"Step 7: Final reply: {reply}")
+        return ChatResponse(
+            reply=reply,
+            session_state=redis_service.get_session(uid, sid),
+            need_clarify=False,
+            diagnosed=False,
+            diseases=top_disease_names,
+            symptoms=None
+        )
+
