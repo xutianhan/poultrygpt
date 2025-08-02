@@ -14,6 +14,12 @@ for proc in psutil.process_iter(['pid', 'cmdline']):
 gc.collect()
 PY
 
+echo ">>> 清空 Redis 缓存 ..."
+python3 - <<'PY'
+from app.services.redis_service import clear_redis_cache
+clear_redis_cache()
+PY
+
 echo ">>> 停止 Redis ..."
 sudo systemctl stop redis || echo "Redis 已停止"
 

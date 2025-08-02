@@ -20,3 +20,6 @@ def incr_turn(uid: str, sid: str) -> int:
 def get_all_disease_symptoms():
     disease_symptoms = r.hgetall("disease_symptoms")
     return {k: json.loads(v) for k, v in disease_symptoms.items()}
+
+def clear_redis_cache():
+    r.flushall()
