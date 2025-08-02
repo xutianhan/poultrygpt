@@ -61,7 +61,7 @@ def multi_round_conversation():
         print("系统提示：", response1.get("reply"))
     
     # 等待用户响应（模拟）
-    time.sleep(2)
+    time.sleep(10)
     
     # 第二轮对话
     print("\n第二轮对话：")
@@ -71,7 +71,7 @@ def multi_round_conversation():
         print("系统提示：", response2.get("reply"))
     
     # 等待用户响应（模拟）
-    time.sleep(2)
+    time.sleep(10)
     
     # 第三轮对话
     print("\n第三轮对话：")
