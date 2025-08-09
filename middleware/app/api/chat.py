@@ -14,7 +14,7 @@ router = APIRouter(prefix="/api/chat", tags=["chat"])
 @router.post("/diagnose", response_model=ChatResponse)
 def chat_endpoint(req: ChatRequest):
     uid, sid = req.user_id, req.session_id
-    state = redis_service.get_session(uid, sid)
+    state = redis_service.get_session(uid, sid) or {}
     turn = redis_service.incr_turn(uid, sid)  # 先自增轮次
 
     logger.info(f"Step 1: User ID: {uid}, Session ID: {sid}, Turn: {turn}, Intent: {req.intent}, Query: {req.query}, Entities: {req.entities}")
@@ -32,7 +32,7 @@ def chat_endpoint(req: ChatRequest):
     logger.info(f"Step 2: Normalized entities: {confirmed}, Pending clarification: {pending}")
 
     # 2. 更新 Redis 状态
-    existing_entities = set(entity[0] for entity in state.get("entities", []))
+    existing_entities = set(state.get("entities", []))
     new_entities = [entity[0] for entity in confirmed]  # 提取 symptom 部分
     updated_entities = list(existing_entities.union(new_entities))  # 合并并去重
     redis_service.set_session(
@@ -54,11 +54,11 @@ def chat_endpoint(req: ChatRequest):
             need_clarify=True,
             diagnosed=False,
             diseases=None,
-            symptoms=None
+            symptoms=updated_entities  # 确保返回的 symptoms 是最新的
         )
 
     # 4. 无需澄清，则用已确认实体查询 Redis
-    user_symptoms = [entity[0] for entity in state.get("entities", [])]  # 提取 
+    user_symptoms = state.get("entities", [])
     all_disease_symptoms = redis_service.get_all_disease_symptoms()
 
     logger.info(f"Step 4: User symptoms: {user_symptoms}")
@@ -88,12 +88,12 @@ def chat_endpoint(req: ChatRequest):
             need_clarify=False,
             diagnosed=True,
             diseases=diagnosed_disease_names,
-            symptoms=diagnosed_symptoms
+            symptoms=updated_entities  # 确保返回的 symptoms 是最新的
         )
 
     # 7. 如果未确诊，继续澄清症状
     suggested_symptoms = neo4j_service.get_suggested_symptoms(disease_ids, state.get("entities", []))
-    question = f"根据症状 {', '.join(user_symptoms)}，可能的疾病有：{', '.join([disease['disease_name'] for disease in all_disease_symptoms.values()])}。请提供更多症状以缩小范围。建议描述以下症状：{', '.join(suggested_symptoms)}"
+    question = f"根据症状您的症状描述，家禽可能患有的疾病有多个。请提供更多症状以缩小范围。建议描述以下症状：{', '.join(suggested_symptoms)}"
     redis_service.set_session(uid, sid, last_question=question)
     logger.info(f"Step 7: Suggested symptoms: {suggested_symptoms}")
     return ChatResponse(
@@ -102,7 +102,7 @@ def chat_endpoint(req: ChatRequest):
         need_clarify=True,
         diagnosed=False,
         diseases=None,
-        symptoms=None
+        symptoms=updated_entities  # 确保返回的 symptoms 是最新的
     )
 
     # 8. 如果未确诊且轮数 >= 20，结束对话并给出最可能的三个疾病
@@ -119,6 +119,6 @@ def chat_endpoint(req: ChatRequest):
             need_clarify=False,
             diagnosed=False,
             diseases=top_disease_names,
-            symptoms=None
+            symptoms=updated_entities  # 确保返回的 symptoms 是最新的
         )
-
+        
