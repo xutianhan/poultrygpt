@@ -1,0 +1,1 @@
+curl -X POST "http://175.27.253.234:8000/api/chat/diagnose" -H "Content-Type: application/json" -d '{"user_id": "test_user_333", "session_id": "test_session_333", "query": "眼睑水肿和流泪", "intent": "diagnose", "entities": ["眼睑水肿", "流泪"]}'
