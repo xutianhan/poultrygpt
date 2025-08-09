@@ -10,18 +10,22 @@ def get_session(uid: str, sid: str) -> dict:
     data = r.hgetall(_key(uid, sid)) or {}
     result = {}
     for k, v in data.items():
-        try:
-            result[k] = json.loads(v)
-        except json.JSONDecodeError:
-            result[k] = v
+        if v == "null":  # 检查是否为字符串 "null"
+            result[k] = None
+        else:
+            try:
+                result[k] = json.loads(v)
+            except json.JSONDecodeError:
+                result[k] = v
     return result
 
 def set_session(uid: str, sid: str, **fields):
     for k, v in fields.items():
-        if isinstance(v, list) or isinstance(v, dict):
-            r.hset(_key(uid, sid), k, json.dumps(v, ensure_ascii=False))
-        else:
-            r.hset(_key(uid, sid), k, v)
+        if v is None:
+            v = "null"  # 将 None 转换为字符串 "null"
+        elif isinstance(v, list) or isinstance(v, dict):
+            v = json.dumps(v, ensure_ascii=False)
+        r.hset(_key(uid, sid), k, v)
 
 def incr_turn(uid: str, sid: str) -> int:
     return r.hincrby(_key(uid, sid), "turn", 1)
